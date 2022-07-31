@@ -55,5 +55,5 @@ aggregated_file = pd.concat(aggregate_file_list)
 aggregated_file.to_pickle(SAVE_DIR + target_year_month + '/' + target_file.format(target_year_month), protocol = 4)
 bucket.upload_file(
     SAVE_DIR + target_year_month + '/' + target_file.format(target_year_month),
-    "bitflyer/BTC/daily_temp/" + target_file.format(target_year_month)
+    "bitflyer/BTC/" + target_file.format(target_year_month)
 )
