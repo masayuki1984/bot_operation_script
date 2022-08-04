@@ -5,6 +5,7 @@ import boto3
 import calendar
 import glob
 import pandas as pd
+import shutil
 
 
 def fetch_yaml_config() -> dict:
@@ -57,3 +58,6 @@ bucket.upload_file(
     SAVE_DIR + target_year_month + '/' + target_file.format(target_year_month),
     "bitflyer/BTC/" + target_file.format(target_year_month)
 )
+
+# スクリプトの作業ディレクトリ(/tmp/YYYYMM)の削除
+shutil.rmtree(SAVE_DIR + target_year_month + '/')
