@@ -6,7 +6,7 @@ import pandas as pd
 import yaml
 
 def fetch_yaml_config() -> dict:
-    config = "/script/bitflyer/config.yml"
+    config = "/script/config.yml"
     with open(config, "r", encoding="utf-8") as yml:
         config = yaml.safe_load(yml)
     return config
