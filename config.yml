@@ -1,0 +1,25 @@
+# AWS
+AWS:
+  ACCESS_KEY: '[AWS ACCESS KEYを入力]'
+  SECRET_ACCESS_KEY: '[AWS SECRET ACCESS KEYを入力]'
+  BUCKET: '[CRYPT COIN用のバケット名を入力]'
+
+# bitflyer
+bitflyer:
+  BTC_JPY:
+    SAVEDIR: '/tmp/'
+    SYMBOL: 'BTC_JPY'
+    UPLOAD_PATH: 'bitflyer/BTC/daily_temp/'
+  FX_BTC_JPY:
+    SAVEDIR: '/tmp/'
+    SYMBOL: 'FX_BTC_JPY'
+    UPLOAD_PATH: 'bitflyer/FX_BTC/daily_temp/'
+
+# bybit
+bybit:
+  PAXG_USDT:
+    FILENAME: 'PAXG_USDT_ohlcv_'
+    SAVEDIR: '/tmp/'
+    SYMBOL: 'PAXG/USDT:USDT'
+    UPLOAD_PATH: 'bybit/PAXG_USDT/daily_temp/'
+    TIME_FRAME: '1m'
