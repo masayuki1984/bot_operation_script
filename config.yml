@@ -10,10 +10,12 @@ bitflyer:
     SAVEDIR: '/tmp/'
     SYMBOL: 'BTC_JPY'
     UPLOAD_PATH: 'bitflyer/BTC/daily_temp/'
+    DOWNLOAD_PATH: 'bitflyer/BTC/daily_temp/'
   FX_BTC_JPY:
     SAVEDIR: '/tmp/'
     SYMBOL: 'FX_BTC_JPY'
     UPLOAD_PATH: 'bitflyer/FX_BTC/daily_temp/'
+    DOWNLOAD_PATH: 'bitflyer/FX_BTC/daily_temp/'
 
 # bybit
 bybit:

@@ -25,15 +25,15 @@ def get_daily_download_filename(target_year:int, target_month:int, target_file:s
 
 # 環境変数読み込み
 config = fetch_yaml_config()
-ACCESS_KEY = config["ACCESS_KEY"]
-SECRET_ACCESS_KEY = config["SECRET_ACCESS_KEY"]
+ACCESS_KEY = config['AWS']['ACCESS_KEY']
+SECRET_ACCESS_KEY = config['AWS']['SECRET_ACCESS_KEY']
 s3 = boto3.resource('s3', aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_ACCESS_KEY, region_name='ap-northeast-1')
-bucket = s3.Bucket(config["BUCKET"])
+bucket = s3.Bucket(config['AWS']['BUCKET'])
 target_year = sys.argv[1]
 target_month = sys.argv[2]
 target_year_month = target_year.zfill(4) + target_month.zfill(2)
-SAVE_DIR = "/tmp/"
-download_path = "bitflyer/FX_BTC/daily_temp/"
+SAVE_DIR = config['bitflyer']['FX_BTC_JPY']['SAVEDIR']
+download_path = config['bitflyer']['FX_BTC_JPY']['UPLOAD_PATH']
 target_file = "FX_BTC_JPY_ohlcv_{}.pkl"
 
 #対象年月のs3ダウンロードファイル取得処理
