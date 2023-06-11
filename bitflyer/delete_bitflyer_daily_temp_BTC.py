@@ -4,7 +4,7 @@ import boto3
 import calendar
 
 def fetch_yaml_config() -> dict:
-    config = "/script/bitflyer/config.yml"
+    config = "/script/config.yml"
     with open(config, "r", encoding="utf-8") as yml:
         config = yaml.safe_load(yml)
     return config
@@ -27,10 +27,10 @@ def delete_objects(bucket, object_keys):
 
 # 環境変数読み込み
 config = fetch_yaml_config()
-ACCESS_KEY = config["ACCESS_KEY"]
-SECRET_ACCESS_KEY = config["SECRET_ACCESS_KEY"]
+ACCESS_KEY = config['AWS']['ACCESS_KEY']
+SECRET_ACCESS_KEY = config['AWS']['SECRET_ACCESS_KEY']
 s3 = boto3.resource('s3', aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_ACCESS_KEY, region_name='ap-northeast-1')
-bucket = s3.Bucket(config["BUCKET"])
+bucket = s3.Bucket(config['AWS']['BUCKET'])
 target_year = sys.argv[1]
 target_month = sys.argv[2]
 save_path = "bitflyer/BTC/daily_temp/"
