@@ -32,9 +32,9 @@ bucket = s3.Bucket(config['AWS']['BUCKET'])
 target_year = sys.argv[1]
 target_month = sys.argv[2]
 target_year_month = target_year.zfill(4) + target_month.zfill(2)
-SAVE_DIR = config['bitflyer']['BTC_JPY']['SAVEDIR']
-download_path = config['bitflyer']['BTC_JPY']['DOWNLOAD_PATH']
-target_file = "BTC_JPY_ohlcv_{}.pkl"
+SAVE_DIR = config['bybit']['PAXG_USDT']['SAVEDIR']
+download_path = config['bybit']['PAXG_USDT']['DOWNLOAD_PATH']
+target_file = "PAXG_USDT_ohlcv_{}.pkl"
 
 #対象年月のs3ダウンロードファイル取得処理
 download_files = get_daily_download_filename(int(target_year), int(target_month), target_file)
@@ -48,7 +48,7 @@ read_files = glob.glob(SAVE_DIR + target_year_month + '/*')
 aggregate_file_list = []
 read_files.sort()
 for file in read_files:
-    aggregate_file_list.append(pd.read_pickle(file))
+    aggregate_file_list.append(pd.read_csv(file))
 
 aggregated_file = pd.concat(aggregate_file_list)
 
@@ -56,7 +56,7 @@ aggregated_file = pd.concat(aggregate_file_list)
 aggregated_file.to_pickle(SAVE_DIR + target_year_month + '/' + target_file.format(target_year_month), protocol = 4)
 bucket.upload_file(
     SAVE_DIR + target_year_month + '/' + target_file.format(target_year_month),
-    "bitflyer/BTC/" + target_file.format(target_year_month)
+    "bybit/PAXG_USDT/" + target_file.format(target_year_month)
 )
 
 # スクリプトの作業ディレクトリ(/tmp/YYYYMM)の削除
