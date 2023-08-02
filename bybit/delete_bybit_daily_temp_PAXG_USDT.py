@@ -34,7 +34,7 @@ bucket = s3.Bucket(config['AWS']['BUCKET'])
 target_year = sys.argv[1]
 target_month = sys.argv[2]
 save_path = config['bybit']['PAXG_USDT']['UPLOAD_PATH']
-target_file = "PAXG_USDT_ohlcv_{}.csv"
+target_file = "PAXG_USDT_ohlcv_{}.pkl"
 
 #対象年月のs3ダウンロードファイル削除処理
 delete_file_names = get_daily_download_filename(int(target_year), int(target_month), target_file)
