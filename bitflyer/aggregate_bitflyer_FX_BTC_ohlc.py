@@ -33,7 +33,7 @@ target_year = sys.argv[1]
 target_month = sys.argv[2]
 target_year_month = target_year.zfill(4) + target_month.zfill(2)
 SAVE_DIR = config['bitflyer']['FX_BTC_JPY']['SAVEDIR']
-download_path = config['bitflyer']['FX_BTC_JPY']['UPLOAD_PATH']
+download_path = config['bitflyer']['FX_BTC_JPY']['DOWNLOAD_PATH']
 target_file = "FX_BTC_JPY_ohlcv_{}.pkl"
 
 #対象年月のs3ダウンロードファイル取得処理

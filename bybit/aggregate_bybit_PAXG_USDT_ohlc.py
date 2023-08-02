@@ -48,7 +48,7 @@ read_files = glob.glob(SAVE_DIR + target_year_month + '/*')
 aggregate_file_list = []
 read_files.sort()
 for file in read_files:
-    aggregate_file_list.append(pd.read_csv(file))
+    aggregate_file_list.append(pd.read_pickle(file))
 
 aggregated_file = pd.concat(aggregate_file_list)
 
