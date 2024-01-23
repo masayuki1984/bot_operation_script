@@ -26,3 +26,11 @@ bybit:
     UPLOAD_PATH: 'bybit/PAXG_USDT/daily_temp/'
     DOWNLOAD_PATH: 'bybit/PAXG_USDT/daily_temp/'
     TIME_FRAME: '1m'
+
+# GMOコイン
+gmo_coin:
+  DAI_JPY:
+    API_KEY: '[GMOコインのAPIキーを入力]'
+    API_SECRET: '[GMOコインのAPIシークレットを入力]'
+    SYMBOL: 'DAI'
+    TARGET_AMOUNT: 250
