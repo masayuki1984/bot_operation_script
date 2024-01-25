@@ -28,6 +28,39 @@ TARGET_AMOUNT = config['gmo_coin']['DAI_JPY']['TARGET_AMOUNT']
 def get_usd_jpy_price():
     """
     USD/JPYの価格を取得する
+    
+    Returns
+    usd_jpy_price : float
+        USD/JPYの価格(bidとaskの平均値)
+    """
+    endPoint = 'https://forex-api.coin.z.com/public'
+    path = '/v1/ticker'
+    symbol_list = requests.get(endPoint + path)
+    for symbol in symbol_list.json()['data']:
+        if symbol['symbol'] == 'USD_JPY':
+            usd_jpy_ask = float(symbol['ask'])
+            usd_jpy_bid = float(symbol['bid'])
+
+    usd_jpy_price = (usd_jpy_ask + usd_jpy_bid) / 2
+    return usd_jpy_price
+
+def get_dai_jpy_price():
+    """
+    DAI/JPYのbid(max)価格を取得する
+    
+    Returns
+    buying_board_max_price : float
+        DAI/JPYの価格(bidのMAX値)
+    """
+    endPoint = 'https://api.coin.z.com/public'
+    path = '/v1/ticker?symbol=DAI'
+    response = requests.get(endPoint + path)
+    buying_board_max_price = float(response.json()['data'][0]['bid'])
+    return buying_board_max_price
+
+def check_price_deviation():
+    """
+    USD/JPYの価格を取得する
 
     Parameters
     ----------
@@ -38,20 +71,6 @@ def get_usd_jpy_price():
     historical_data : list
         指定期間のヒストリカルデータ
     """
-    endPoint = 'https://forex-api.coin.z.com/public'
-    path = '/v1/ticker'
-    symbol_list = requests.get(endPoint + path)
-    for symbol in symbol_list.json()['data']:
-        if symbol['symbol'] == 'USD_JPY':
-            usd_jpy_ask = float(symbol['ask'])
-            usd_jpy_bid = float(symbol['bid'])
-
-    return (usd_jpy_ask + usd_jpy_bid) / 2
-
-def get_dai_jpy_price():
-    pass
-
-def check_price_deviation():
     pass
 
 def check_own_dai_is_achieved():
