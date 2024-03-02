@@ -34,3 +34,4 @@ gmo_coin:
     API_SECRET: '[GMOコインのAPIシークレットを入力]'
     SYMBOL: 'DAI'
     TARGET_AMOUNT: 250
+    DEVIATION: 0.05

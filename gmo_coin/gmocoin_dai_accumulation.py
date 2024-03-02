@@ -23,9 +23,10 @@ API_KEY = config['gmo_coin']['DAI_JPY']['API_KEY']
 API_SECRET = config['gmo_coin']['DAI_JPY']['API_SECRET']
 SYMBOL = config['gmo_coin']['DAI_JPY']['SYMBOL']
 TARGET_AMOUNT = config['gmo_coin']['DAI_JPY']['TARGET_AMOUNT']
+DEVIATION = config['gmo_coin']['DAI_JPY']['DEVIATION']
 
 
-def get_usd_jpy_price():
+def get_usd_jpy_price() -> float:
     """
     USD/JPYの価格を取得する
     
@@ -44,7 +45,7 @@ def get_usd_jpy_price():
     usd_jpy_price = (usd_jpy_ask + usd_jpy_bid) / 2
     return usd_jpy_price
 
-def get_dai_jpy_price():
+def get_dai_jpy_price() -> float:
     """
     DAI/JPYのbid(max)価格を取得する
     
@@ -58,20 +59,23 @@ def get_dai_jpy_price():
     buying_board_max_price = float(response.json()['data'][0]['bid'])
     return buying_board_max_price
 
-def check_price_deviation():
+def check_price_deviation(usd_jpy_price: float, buying_board_max_price: float) -> float:
     """
-    USD/JPYの価格を取得する
+    USD/JPYの価格とDAI/JPYの価格の価格差（乖離幅）をDAI/JPY価格で割った指標を計算する
 
     Parameters
     ----------
-    start_time : int
-        ヒストリカルデータを取得する開始期間
+    usd_jpy_price : float
+        USD/JPY価格
+    buying_board_max_price : float
+        DAI/JPY価格（買い板のMAX値）
     
     Returns
-    historical_data : list
-        指定期間のヒストリカルデータ
+    deviation_rate : float
+        USD/JPYとDAI/JPYの乖離率
     """
-    pass
+    deviation_rate = (usd_jpy_price - buying_board_max_price) / buying_board_max_price * 100
+    return deviation_rate
 
 def check_own_dai_is_achieved():
     pass
@@ -139,7 +143,8 @@ usd_jpy_price = get_usd_jpy_price()
 buying_board_max_price = get_dai_jpy_price()
     
 # USD/JPYとDAI/JPYの価格を比較して設定値以上の乖離があるか確認
-order_valid = check_price_deviation(usd_jpy_price, buying_board_max_price)
+order_valid = DEVIATION < check_price_deviation(usd_jpy_price, buying_board_max_price)
+
 
 # 所有DAIが月間目標数に達しているか確認
 is_achieved = check_own_dai_is_achieved()
