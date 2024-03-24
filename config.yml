@@ -35,3 +35,4 @@ gmo_coin:
     SYMBOL: 'DAI'
     TARGET_AMOUNT: 250
     DEVIATION: 0.05
+    PRIVATE_ENDPOINT: 'https://api.coin.z.com/private'
