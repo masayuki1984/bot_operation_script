@@ -98,7 +98,6 @@ def get_dai_balance(API_KEY, API_SECRET, SYMBOL, PRIVATE_ENDPOINT) -> int:
     """
     timestamp = '{0}000'.format(int(time.mktime(datetime.now().timetuple())))
     method    = 'GET'
-    endPoint  = PRIVATE_ENDPOINT
     path      = '/v1/account/assets'
 
     text = timestamp + method + path
@@ -110,7 +109,7 @@ def get_dai_balance(API_KEY, API_SECRET, SYMBOL, PRIVATE_ENDPOINT) -> int:
         "API-SIGN": sign
     }
 
-    res = requests.get(endPoint + path, headers=headers)
+    res = requests.get(PRIVATE_ENDPOINT + path, headers=headers)
     if res.json()['status'] != 0:
         # エラー処理
         pass
@@ -158,11 +157,100 @@ def calc_left_days() -> int:
     left_days = calendar.monthrange(dt_year, dt_month)[1]
     return left_days
 
-def get_active_order(symbol):
-    pass
+def get_active_order(API_KEY: str, API_SECRET: str, SYMBOL: str, PRIVATE_ENDPOINT: str) -> list:
+    """
+    有効注文一覧を取得する
 
-def order_cancel(order_id_list):
-    pass
+    Parameters
+    ----------
+    API_KEY : str
+        APIキー
+    API_SECRET: str
+        APIシークレット
+    SYMBOL: str
+        対象の通貨
+    PRIVATE_ENDPOINT: str
+        PrivateAPIのエンドポイント
+    
+    Returns
+    valid_order_list : list
+        有効注文のリスト
+    """
+    timestamp = '{0}000'.format(int(time.mktime(datetime.now().timetuple())))
+    method    = 'GET'
+    path      = '/v1/activeOrders'
+    
+    text = timestamp + method + path
+    sign = hmac.new(bytes(API_SECRET.encode('ascii')), bytes(text.encode('ascii')), hashlib.sha256).hexdigest()
+    parameters = {
+        "symbol": SYMBOL,
+        "page": 1,
+        "count": 10
+    }
+    
+    headers = {
+        "API-KEY": API_KEY,
+        "API-TIMESTAMP": timestamp,
+        "API-SIGN": sign
+    }
+    
+    res = requests.get(PRIVATE_ENDPOINT + path, headers=headers, params=parameters)
+    if res.json()['status'] != 0:
+        # エラー処理
+        pass
+    
+    if res.json()['data']:
+        valid_order_list = res.json()['data']['list']
+    else:
+        valid_order_list = list()
+    return valid_order_list
+
+def order_cancel(API_KEY, API_SECRET, PRIVATE_ENDPOINT, valid_order_list) -> bool:
+    """
+    有効注文一覧を取得する
+
+    Parameters
+    ----------
+    API_KEY : str
+        APIキー
+    API_SECRET: str
+        APIシークレット
+    PRIVATE_ENDPOINT: str
+        PrivateAPIのエンドポイント
+    valid_order_list: list
+        有効注文のリスト
+    
+    Returns
+    order_cancel_result : bool
+        有効注文が全てキャンセル成功した場合True, キャンセル失敗した場合にはFalse
+    """
+    timestamp = '{0}000'.format(int(time.mktime(datetime.now().timetuple())))
+    method    = 'POST'
+    path      = '/v1/cancelOrder'
+
+    cancel_order_list= []
+    for order in valid_order_list:
+        reqBody = {
+            "orderId": order['orderId']
+        }
+    
+        text = timestamp + method + path + json.dumps(reqBody)
+        sign = hmac.new(bytes(API_SECRET.encode('ascii')), bytes(text.encode('ascii')), hashlib.sha256).hexdigest()
+
+        headers = {
+            "API-KEY": API_KEY,
+            "API-TIMESTAMP": timestamp,
+            "API-SIGN": sign
+        }
+
+        res = requests.post(PRIVATE_ENDPOINT + path, headers=headers, data=json.dumps(reqBody))
+        cancel_order_list.append(res.json()['status'])
+    
+    if all(status == 0 for status in cancel_order_list):
+        order_cancel_result = True
+    else:
+        order_cancel_result = False
+    return order_cancel_result
 
 def check_own_jpy_is_enough() -> bool:
     pass
@@ -234,8 +322,12 @@ if order_valid and not is_achieved:
     buying_size = math.ceil((TARGET_AMOUNT - dai_balance) / left_days)
 
     # 有効注文がある場合、注文のキャンセルをおこなう
-    order_id_list = get_active_order(SYMBOL)
-    order_cancel(order_id_list)
+    valid_order_list = get_active_order(SYMBOL)
+    if valid_order_list:
+        is_order_cancel_success = order_cancel(valid_order_list)
+        if not is_order_cancel_success:
+            # エラー処理
+            pass
 
     # 通貨を買うためのJPY資産が充分にあるか確認をおこなう
     is_enough_jpy = check_own_jpy_is_enough()
